@@ -1,0 +1,7 @@
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\LGWebApp.exe
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\appsettings.Development.json
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\appsettings.json
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\LGWebApp.dll
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\LGWebApp.deps.json
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\LGWebApp.runtimeconfig.json
+D:\training\devops\az400_training\LGWebApp\bin\Release\net9.0\publish\LGWebApp.pdb
