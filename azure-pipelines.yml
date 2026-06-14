@@ -7,19 +7,20 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 
-# Install .NET SDK
+# Install .NET 9 SDK
 - task: UseDotNet@2
-  displayName: 'Install .NET SDK'
+  displayName: 'Install .NET 9 SDK'
   inputs:
     packageType: 'sdk'
-    version: '8.0.x'
+    version: '9.0.x'
 
-# Verify SDK
-- script: dotnet --info
+# Verify installation
+- script: |
+    dotnet --info
   displayName: 'Display .NET Info'
 
 # Restore packages
@@ -29,7 +30,7 @@ steps:
     command: 'restore'
     projects: 'LGWebApp.csproj'
 
-# Build project
+# Build
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
@@ -37,20 +38,18 @@ steps:
     projects: 'LGWebApp.csproj'
     arguments: '--configuration $(buildConfiguration) --no-restore'
 
-# Publish project
+# Publish
 - task: DotNetCoreCLI@2
   displayName: 'Publish'
   inputs:
     command: 'publish'
-    publishWebProjects: false
     projects: 'LGWebApp.csproj'
+    publishWebProjects: false
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
 
 # Publish artifact
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+  displayName: 'Publish Build Artifact'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
-    publishLocation: 'Container'
