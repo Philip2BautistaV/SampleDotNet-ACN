@@ -5,8 +5,6 @@
 
 trigger:
 - main
-- develop
-- ort
 
 pool:
   vmImage: windows-latest
