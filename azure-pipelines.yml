@@ -6,6 +6,7 @@
 trigger:
 - main
 - Develop
+- release/*
 
 pool:
   vmImage: windows-latest
