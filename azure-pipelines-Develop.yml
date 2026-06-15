@@ -53,6 +53,7 @@ steps:
     projects: 'LGWebApp.csproj'
     publishWebProjects: false
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
 
 # Publish artifact
 - task: PublishBuildArtifacts@1
