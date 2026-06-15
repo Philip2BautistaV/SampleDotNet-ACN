@@ -8,6 +8,10 @@ trigger:
   include:
     - Develop
 
+pr:
+  branches:
+    include:
+      - Develop
 
 pool:
   vmImage: windows-latest
