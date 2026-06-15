@@ -8,8 +8,9 @@ trigger:
     include:
       - Develop
     exclude:
-      - main
       - release/*
+      - main
+      
 pr:
   branches:
     include:
