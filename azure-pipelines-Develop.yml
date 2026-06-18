@@ -7,9 +7,6 @@ trigger:
   branches:
     include:
       - Develop
-    exclude:
-      - release/*
-      - main
       
 pr:
   branches:
