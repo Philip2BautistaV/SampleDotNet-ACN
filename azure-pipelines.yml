@@ -9,7 +9,7 @@ trigger:
       - develop
       - release/*
       - main
-      
+
 pr:
   branches:
     include:
