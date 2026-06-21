@@ -63,12 +63,4 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
-    condition:
-    and(
-      succeeded(),
-      or(
-        eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/develop'),
-        startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
-      )
-    )
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
