@@ -63,7 +63,7 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
-    condition: |
+    condition:
     and(
       succeeded(),
       or(
