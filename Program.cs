@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "DataPlatform Completed");
+app.MapGet("/", () => "Final Testing for Today");
 
 app.Run();
