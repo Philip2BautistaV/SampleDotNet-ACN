@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "WebApp deployment completed");
+app.MapGet("/", () => "Indespensible update in UI");
 
 app.Run();
