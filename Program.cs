@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "WebApp testing - 062326");
+app.MapGet("/", () => "DBG pipeline test - 062426");
 
 app.Run();
