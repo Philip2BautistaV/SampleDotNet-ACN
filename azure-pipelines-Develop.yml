@@ -1,62 +1,39 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+trigger: none
 
-trigger:
-  branches:
-    include:
-      - Develop
-      
-pr:
-  branches:
-    include:
-      - Develop
+resources:
+  pipelines:
+  - pipeline: ci
+    source: CI
+    trigger:
+      branches:
+        include:
+          - develop
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 
-steps:
+stages:
+- stage: Deploy_Dev
+  displayName: Deploy to Development
 
-# Install .NET 9 SDK
-- task: UseDotNet@2
-  displayName: 'Install .NET 9 SDK'
-  inputs:
-    packageType: 'sdk'
-    version: '9.0.x'
+  jobs:
+  - deployment: DeployWebApp
 
-# Verify installation
-- script: |
-    dotnet --info
-  displayName: 'Display .NET Info'
+    displayName: Deploy Web Application
 
-# Restore packages
-- task: DotNetCoreCLI@2
-  displayName: 'Restore'
-  inputs:
-    command: 'restore'
-    projects: 'LGWebApp.csproj'
+    environment: Development
 
-# Build
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    projects: 'LGWebApp.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
 
-# Publish
-- task: DotNetCoreCLI@2
-  displayName: 'Publish'
-  inputs:
-    command: 'publish'
-    projects: 'LGWebApp.csproj'
-    publishWebProjects: false
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+          - download: ci
+            artifact: drop
 
-# Publish artifact
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifact'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '45138fee-3b39-4bda-bba3-d5461fad16ab'
+                WebAppKind: 'webApp'
+                WebAppName: 'Staging101'
+              package: ''$(System.DefaultWorkingDirectory)/Develop Branch/drop/s.zip'
