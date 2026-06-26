@@ -17,6 +17,7 @@ variables:
   buildConfiguration: 'Release'
   azureServiceConnection: '45138fee-3b39-4bda-bba3-d5461fad16ab'
   WebAppKind: 'webApp'
+  WebAppName1: 'Staging101'
 
 stages:
 
@@ -89,50 +90,12 @@ stages:
 # STAGE 2: STAGING (FROM CD YAML)
 # ====================================
 - stage: Staging
-  displayName: 'Deploy to DBG-Training'
+  displayName: 'Deploy to Development Environment'
   dependsOn: Build
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/Develop')
 
   jobs:
     - deployment: Deploy_Staging
-      environment: 'DBG-Training'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - download: current
-                artifact: drop
-
-
-# ====================================
-# STAGE 3: ORT
-# ====================================
-- stage: ORT
-  displayName: 'Deploy to ORT-Environment'
-  dependsOn: Build
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
-
-  jobs:
-    - deployment: Deploy_ORT
-      environment: 'ORT-Environment'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - download: current
-                artifact: drop
-
-
-# ====================================
-# STAGE 4: PRODUCTION
-# ====================================
-- stage: Production
-  displayName: 'Deploy to Production'
-  dependsOn: Build
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-
-  jobs:
-    - deployment: Deploy_Prod
       environment: 'Staging101'
       strategy:
         runOnce:
@@ -140,4 +103,6 @@ stages:
             steps:
               - download: current
                 artifact: drop
+
+
 
