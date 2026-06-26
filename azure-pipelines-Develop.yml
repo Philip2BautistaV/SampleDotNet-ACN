@@ -28,7 +28,7 @@ stages:
   jobs:
     - deployment: DeployWebApp
       displayName: "Deploy to Azure Web App (Staging)"
-      environment: "staging"
+      environment: "Staging101"
       strategy:
         runOnce:
           deploy:
