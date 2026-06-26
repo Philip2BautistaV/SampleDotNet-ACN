@@ -2,20 +2,19 @@
 # Continuous Deployment YAML
 # =========================
 
-trigger: none   # CD should not trigger on code commits
+trigger: none   # No code trigger
 
 resources:
   pipelines:
     - pipeline: ciPipeline
-      source: azure-pipelines  # name of your CI pipeline (azure-pipelines.yml)
+      source: azure-pipelines   # Name of your CI pipeline (azure-pipelines.yml)
       trigger:
         branches:
           include:
             - main
-            - Develop
 
 variables:
-  ConnectedServiceName: '45138fee-3b39-4bda-bba3-d5461fad16ab'
+  ConnectedServiceName: 'a4705bae-6684-47b6-bfa9-1c21f9f43607'   # from your screenshot
   WebAppKind: 'webApp'
   WebAppName: 'Staging101'
 
@@ -26,21 +25,26 @@ stages:
 # =========================
 - stage: Staging
   displayName: "Deploy to Staging"
+
   jobs:
     - deployment: DeployWebApp
-      displayName: "Deploy to Azure Web App (Staging)"
-      environment: "Staging101"
+      displayName: "Deploy Azure App Service"
+      environment: "Staging101"   # must exist in Azure DevOps
+
       strategy:
         runOnce:
           deploy:
             steps:
+              # Download artifact from CI
               - download: ciPipeline
                 artifact: drop
 
+              # Deploy to Azure App Service
               - task: AzureWebApp@1
                 displayName: "Deploy Web App"
                 inputs:
                   azureSubscription: $(ConnectedServiceName)
-                  appType: $(WebAppKind)
+                  appType: webApp
                   appName: $(WebAppName)
-                  package: $(Pipeline.Workspace)/ciPipeline/drop/**/*.zip
+                  package: $(Pipeline.Workspace)/ciPipeline/drop
+``
