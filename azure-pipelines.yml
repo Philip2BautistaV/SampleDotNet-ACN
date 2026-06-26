@@ -89,7 +89,7 @@ steps:
 # Security Scan
 - script: |
     dotnet tool install --global Microsoft.CST.DevSkim.CLI
-    devskim analyze .
+    devskim analyze --source-code $(Build.SourcesDirectory)
   displayName: 'Security Scan'
 
 # Publish
