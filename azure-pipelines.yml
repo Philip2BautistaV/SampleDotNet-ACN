@@ -90,7 +90,7 @@ stages:
 # STAGE 2: STAGING (FROM CD YAML)
 # ====================================
 - stage: Staging
-  displayName: 'Deploy to Production Environment'
+  displayName: 'Deploy to Development Environment'
   dependsOn: Build
   condition: eq(toLower(variables['Build.SourceBranch']), 'refs/heads/develop')
 
@@ -103,6 +103,7 @@ stages:
             steps:
               - download: current
                 artifact: drop
+
 
 
 
