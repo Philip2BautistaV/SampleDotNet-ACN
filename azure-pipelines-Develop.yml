@@ -1,39 +1,45 @@
-trigger: none
+# =========================
+# Continuous Deployment YAML
+# =========================
+
+trigger: none   # CD should not trigger on code commits
 
 resources:
   pipelines:
-  - pipeline: ci
-    source: CI
-    trigger:
-      branches:
-        include:
-          - develop
+    - pipeline: ciPipeline
+      source: azure-pipelines   # name of your CI pipeline (azure-pipelines.yml)
+      trigger:
+        branches:
+          include:
+            - main
 
-pool:
-  vmImage: ubuntu-latest
+variables:
+  ConnectedServiceName: '45138fee-3b39-4bda-bba3-d5461fad16ab'
+  WebAppKind: 'webApp'
+  WebAppName: 'Staging101'
 
 stages:
-- stage: Deploy_Dev
-  displayName: Deploy to Development
 
+# =========================
+# STAGING DEPLOYMENT
+# =========================
+- stage: Staging
+  displayName: "Deploy to Staging"
   jobs:
-  - deployment: DeployWebApp
+    - deployment: DeployWebApp
+      displayName: "Deploy to Azure Web App (Staging)"
+      environment: "staging"
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: ciPipeline
+                artifact: drop
 
-    displayName: Deploy Web Application
-
-    environment: Development
-
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-
-          - download: ci
-            artifact: drop
-
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: '45138fee-3b39-4bda-bba3-d5461fad16ab'
-              appType: webApp
-              appName: 'Staging101'
-              package: ''$(System.DefaultWorkingDirectory)/Develop Branch/drop/s.zip'
+              - task: AzureWebApp@1
+                displayName: "Deploy Web App"
+                inputs:
+                  azureSubscription: $(ConnectedServiceName)
+                  appType: $(WebAppKind)
+                  appName: $(WebAppName)
+                  package: $(Pipeline.Workspace)/ciPipeline/drop/**/*.zip
