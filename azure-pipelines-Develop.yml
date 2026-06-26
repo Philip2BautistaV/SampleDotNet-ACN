@@ -34,6 +34,6 @@ stages:
           - task: AzureWebApp@1
             inputs:
               azureSubscription: '45138fee-3b39-4bda-bba3-d5461fad16ab'
-                WebAppKind: 'webApp'
-                WebAppName: 'Staging101'
+              appType: webApp
+              appName: 'Staging101'
               package: ''$(System.DefaultWorkingDirectory)/Develop Branch/drop/s.zip'
