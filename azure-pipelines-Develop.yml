@@ -7,7 +7,7 @@ trigger: none   # CD should not trigger on code commits
 resources:
   pipelines:
     - pipeline: ciPipeline
-      source: azure-pipelines   # name of your CI pipeline (azure-pipelines.yml)
+      source: Philip2BautistaV.SampleDotNet-ACN   # name of your CI pipeline (azure-pipelines.yml)
       trigger:
         branches:
           include:
