@@ -86,27 +86,47 @@ stages:
           artifact: drop
 
 
-# ====================================
-# STAGE 2: STAGING (FROM CD YAML)
-# ====================================
-- stage: Staging
-  displayName: 'Deploy to Development Environment'
-  dependsOn: Build
-  condition: or(
-  eq(variables['Build.SourceBranch'], 'refs/heads/develop'),
-  eq(variables['Build.SourceBranch'], 'refs/heads/Develop')
-)
 
+# CD Pipeline - Azure App Service Deployment
+
+trigger: none   # CD should not auto-trigger on code changes
+resources:
+  pipelines:
+    - pipeline: ciPipeline
+      source: CI_YAML-TestEnvi   # Name of your CI pipeline
+      trigger:
+        branches:
+          include:
+            - Develop
+            - main
+            - release/*
+
+variables:
+  ConnectedServiceName: '45138fee-3b39-4bda-bba3-d5461fad16ab'
+  WebAppKind: 'webApp'
+  WebAppName: 'Staging101'
+
+stages:
+- stage: Deploy_Staging
+  displayName: Deploy to Staging
   jobs:
-    - deployment: Deploy_Staging
-      environment: 'DBG-Training'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - download: current
-                artifact: drop
+  - deployment: DeployWebApp
+    displayName: Deploy Azure App Service
+    environment: Staging
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: ciPipeline
+            artifact: drop
 
+          - task: AzureRmWebAppDeployment@4
+            displayName: 'Deploy Azure App Service'
+            inputs:
+              azureSubscription: '$(ConnectedServiceName)'
+              appType: '$(WebAppKind)'
+              WebAppName: '$(WebAppName)'
+              packageForLinux: '$(Pipeline.Workspace)/ciPipeline/drop/**/*.zip'
 
 
 
