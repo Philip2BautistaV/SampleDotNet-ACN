@@ -7,7 +7,7 @@ trigger: none   # No code trigger
 resources:
   pipelines:
     - pipeline: ciPipeline
-      source: azure-pipelines   # Name of your CI pipeline (azure-pipelines.yml)
+      source: 'Philip2BautistaV.SampleDotNet-ACN'   # Name of your CI pipeline (azure-pipelines.yml)
       trigger:
         branches:
           include:
