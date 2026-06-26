@@ -17,7 +17,7 @@ variables:
   buildConfiguration: 'Release'
   azureServiceConnection: '45138fee-3b39-4bda-bba3-d5461fad16ab'
   WebAppKind: 'webApp'
-  WebAppName1: 'Staging101'
+  WebAppName1: 'DBG-Training'
 
 stages:
 
@@ -90,7 +90,7 @@ stages:
 # STAGE 2: STAGING (FROM CD YAML)
 # ====================================
 - stage: Staging
-  displayName: 'Deploy to Development Environment'
+  displayName: 'Deploy to Production Environment'
   dependsOn: Build
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/Develop')
 
