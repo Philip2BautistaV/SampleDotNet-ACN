@@ -96,7 +96,7 @@ stages:
 
   jobs:
     - deployment: Deploy_Staging
-      environment: 'Staging101'
+      environment: 'DBG-Training'
       strategy:
         runOnce:
           deploy:
