@@ -6,7 +6,7 @@ pr: none
 resources:
   pipelines:
     - pipeline: ciPipeline   # alias
-      source: azure-pipelines   # 👈 your CI pipeline name
+      source: Philip2BautistaV.SampleDotNet-ACN   # 👈 your CI pipeline name
       trigger:
         branches:
           include:
