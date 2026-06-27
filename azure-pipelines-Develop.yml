@@ -44,7 +44,7 @@ stages:
               - task: AzureRmWebAppDeployment@4
                 displayName: 'Deploy Azure App Service'
                 inputs:
-                  azureSubscription: 'a4705bae-6684-47b6-bfa9-1c21f9f43607'
+                  azureSubscription: 'Azure subscription 1'
                   appType: 'Web App'
                   WebAppName: 'Staging101'
                   packageForLinux: '$(Pipeline.Workspace)/ciPipeline/drop/s.zip'
