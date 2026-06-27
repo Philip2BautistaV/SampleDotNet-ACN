@@ -2,7 +2,7 @@ trigger:
   branches:
     include:
       - feature/*
-      - develop
+      - Develop
 
 pool:
   vmImage: 'ubuntu-latest'
