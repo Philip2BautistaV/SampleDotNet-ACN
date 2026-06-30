@@ -1,111 +1,50 @@
-trigger:
-  branches:
-    include:
-      - feature/*
-      - Develop
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: ciPipeline
+      source: Philip2BautistaV.SampleDotNet-ACN   # ✅ REPLACE with your actual CI pipeline name
+      trigger: true
 
 pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  buildConfiguration: 'Release'
+  vmImage: windows-latest
 
 stages:
 
-# =========================
-# 1. BUILD STAGE (CI)
-# =========================
-- stage: Build
-  displayName: 'Build & Test'
-  jobs:
-    - job: BuildJob
-      steps:
-
-        - checkout: self
-          persistCredentials: true   # Needed for git push later
-
-        - task: UseDotNet@2
-          displayName: 'Install .NET SDK'
-          inputs:
-            packageType: 'sdk'
-            version: '9.0.x'
-
-        - script: dotnet restore
-          displayName: 'Restore'
-
-        - script: dotnet build --configuration $(buildConfiguration)
-          displayName: 'Build'
-
-        - script: dotnet test --configuration $(buildConfiguration) --no-build
-          displayName: 'Run Tests'
-
-        - script: dotnet publish -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
-          displayName: 'Publish'
-
-        - task: PublishBuildArtifacts@1
-          displayName: 'Publish Artifact'
-          inputs:
-            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-            ArtifactName: 'drop'
-
-
-# =========================
-# 2. MERGE TO DEVELOP
-# =========================
-- stage: MergeToDevelop
-  displayName: 'Merge to Develop'
-  dependsOn: Build
-  condition: succeeded()
-
-  jobs:
-    - job: Merge
-      steps:
-        - checkout: self
-          persistCredentials: true
-
-        - script: |
-            git config user.email "buildagent@dev.azure.com"
-            git config user.name "Build Agent"
-
-            git fetch origin
-
-            # Checkout develop
-            git checkout Develop
-            git pull origin Develop
-
-            # Merge source branch into develop
-            git merge origin/$(Build.SourceBranchName) --no-ff -m "Auto-merge from CI pipeline"
-
-            # Push changes
-            git push origin Develop
-          displayName: 'Merge to Develop'
-
-
-# =========================
-# 3. DEPLOY TO DEVELOPMENT
-# =========================
+# ===============================
+# DEPLOY TO DEVELOPMENT
+# ===============================
 - stage: Deploy_Dev
-  displayName: 'Deploy to Development'
-  dependsOn: MergeToDevelop
-  condition: succeeded()
+  displayName: "Deploy to Development Environment"
 
   jobs:
-    - deployment: DeployDev
-      displayName: 'Deploy to Dev Environment'
-      environment: 'Development'
+    - deployment: DeployToDev
+      displayName: "Deploy Azure App Service"
+
+      # ✅ Enables approval (configure in ADO UI)
+      environment: "Staging101"
 
       strategy:
         runOnce:
           deploy:
             steps:
 
-              - download: current
+              # ✅ Download artifact from CI
+              - download: ciPipeline
                 artifact: drop
 
+              # ✅ (Recommended) verify artifact path
               - script: |
-                  echo "Deploying to Development environment..."
-                  echo "Artifact path: $(Pipeline.Workspace)/drop"
-                displayName: 'Deploy Step'
+                  echo "Listing files:"
+                  dir $(Pipeline.Workspace)
+                displayName: "Verify Artifact"
 
-              # Replace with your real deployment task:
-              # - task: AzureWebApp@1 / AzureFunctionApp@1 / etc.
+              # ✅ Your requested deployment task
+              - task: AzureRmWebAppDeployment@4
+                displayName: 'Deploy Azure App Service'
+                inputs:
+                  azureSubscription: 'Azure subscription 1'
+                  appType: 'Web App'
+                  WebAppName: 'Staging101'
+                  packageForLinux: '$(Pipeline.Workspace)/ciPipeline/drop/s.zip'

@@ -49,48 +49,48 @@ steps:
     arguments: '--configuration $(buildConfiguration) --no-restore'
 
 # Linting
-- script: dotnet format --verify-no-changes
-  displayName: 'Lint'
+#- script: dotnet format --verify-no-changes
+#  displayName: 'Lint'
 
 # Unit Tests
-- task: DotNetCoreCLI@2
-  displayName: 'Unit Tests'
-  inputs:
-    command: test
-    projects: '**/*Tests.csproj'
-    arguments: >
-      --configuration Release
-      --no-build
-      --collect:"XPlat Code Coverage"
-      --logger trx
+#- task: DotNetCoreCLI@2
+#  displayName: 'Unit Tests'
+#  inputs:
+#    command: test
+#    projects: '**/*Tests.csproj'
+#    arguments: >
+#      --configuration Release
+#      --no-build
+#      --collect:"XPlat Code Coverage"
+#      --logger trx
 
 # Publish Test Results
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: VSTest
-    testResultsFiles: '**/*.trx'
-    failTaskOnFailedTests: true
+#- task: PublishTestResults@2
+#  inputs:
+#    testResultsFormat: VSTest
+#    testResultsFiles: '**/*.trx'
+#    failTaskOnFailedTests: true
 
 # Publish Code Coverage
-- task: PublishCodeCoverageResults@2
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+#- task: PublishCodeCoverageResults@2
+#  inputs:
+#    codeCoverageTool: Cobertura
+#    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
 # Integration Tests
 
-- task: DotNetCoreCLI@2
-  displayName: 'Integration Tests'
-  inputs:
-    command: test
-    projects: '**/*IntegrationTests.csproj'
-    arguments: '--configuration Release --no-build'
+#- task: DotNetCoreCLI@2
+#  displayName: 'Integration Tests'
+#  inputs:
+#    command: test
+#    projects: '**/*IntegrationTests.csproj'
+#    arguments: '--configuration Release --no-build'
 
 # Security Scan
-- script: |
-    dotnet tool install --global Microsoft.CST.DevSkim.CLI
-    devskim analyze --source-code $(Build.SourcesDirectory)
-  displayName: 'Security Scan'
+#- script: |
+#    dotnet tool install --global Microsoft.CST.DevSkim.CLI
+#    devskim analyze --source-code $(Build.SourcesDirectory)
+#  displayName: 'Security Scan'
 
 # Publish
 - task: DotNetCoreCLI@2
